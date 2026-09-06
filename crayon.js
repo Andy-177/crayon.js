@@ -35,8 +35,6 @@
         el.href = attrs[key];
       } else if (key === 'alt') {
         el.alt = attrs[key];
-      } else if (key === 'placeholder') {
-        el.placeholder = attrs[key];
       } else {
         el.setAttribute(key, attrs[key]);
       }
@@ -181,6 +179,7 @@
         drawer._applyPlacement(element, place);
       }
 
+      // 如果 drawConfig 是 null 或 undefined 或空对象，都视为铺满
       if (drawConfig === undefined || drawConfig === null || (typeof drawConfig === 'object' && Object.keys(drawConfig).length === 0)) {
         drawer._applyRect(element, null);
       } else {
@@ -503,9 +502,9 @@
     return crayon._rootContainer;
   };
 
-  // Widgets - 所有 HTML 元素
+  // Widgets - 包含所有 HTML 元素
   const widget = {
-    // 文本元素
+    // 文本相关
     h1: function(props) {
       return {
         _type: 'widget',
@@ -513,8 +512,9 @@
         props: Object.assign({}, props, {
           style: Object.assign({
             position: 'relative',
-            fontSize: '2rem',
-            fontWeight: 'bold'
+            fontSize: '2em',
+            fontWeight: 'bold',
+            margin: '0.67em 0'
           }, props && props.style)
         })
       };
@@ -526,8 +526,9 @@
         props: Object.assign({}, props, {
           style: Object.assign({
             position: 'relative',
-            fontSize: '1.5rem',
-            fontWeight: 'bold'
+            fontSize: '1.5em',
+            fontWeight: 'bold',
+            margin: '0.83em 0'
           }, props && props.style)
         })
       };
@@ -539,8 +540,9 @@
         props: Object.assign({}, props, {
           style: Object.assign({
             position: 'relative',
-            fontSize: '1.17rem',
-            fontWeight: 'bold'
+            fontSize: '1.17em',
+            fontWeight: 'bold',
+            margin: '1em 0'
           }, props && props.style)
         })
       };
@@ -552,8 +554,9 @@
         props: Object.assign({}, props, {
           style: Object.assign({
             position: 'relative',
-            fontSize: '1rem',
-            fontWeight: 'bold'
+            fontSize: '1em',
+            fontWeight: 'bold',
+            margin: '1.33em 0'
           }, props && props.style)
         })
       };
@@ -565,8 +568,9 @@
         props: Object.assign({}, props, {
           style: Object.assign({
             position: 'relative',
-            fontSize: '0.83rem',
-            fontWeight: 'bold'
+            fontSize: '0.83em',
+            fontWeight: 'bold',
+            margin: '1.67em 0'
           }, props && props.style)
         })
       };
@@ -578,8 +582,9 @@
         props: Object.assign({}, props, {
           style: Object.assign({
             position: 'relative',
-            fontSize: '0.67rem',
-            fontWeight: 'bold'
+            fontSize: '0.67em',
+            fontWeight: 'bold',
+            margin: '2.33em 0'
           }, props && props.style)
         })
       };
@@ -591,7 +596,7 @@
         props: Object.assign({}, props, {
           style: Object.assign({
             position: 'relative',
-            margin: '0 0 1em 0'
+            margin: '1em 0'
           }, props && props.style)
         })
       };
@@ -615,19 +620,6 @@
           style: Object.assign({
             position: 'relative',
             fontSize: '14px'
-          }, props && props.style)
-        })
-      };
-    },
-    a: function(props) {
-      return {
-        _type: 'widget',
-        tag: 'a',
-        props: Object.assign({}, props, {
-          style: Object.assign({
-            position: 'relative',
-            color: '#0066cc',
-            textDecoration: 'none'
           }, props && props.style)
         })
       };
@@ -656,30 +648,6 @@
         })
       };
     },
-    b: function(props) {
-      return {
-        _type: 'widget',
-        tag: 'b',
-        props: Object.assign({}, props, {
-          style: Object.assign({
-            position: 'relative',
-            fontWeight: 'bold'
-          }, props && props.style)
-        })
-      };
-    },
-    i: function(props) {
-      return {
-        _type: 'widget',
-        tag: 'i',
-        props: Object.assign({}, props, {
-          style: Object.assign({
-            position: 'relative',
-            fontStyle: 'italic'
-          }, props && props.style)
-        })
-      };
-    },
     u: function(props) {
       return {
         _type: 'widget',
@@ -692,6 +660,18 @@
         })
       };
     },
+    s: function(props) {
+      return {
+        _type: 'widget',
+        tag: 's',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            position: 'relative',
+            textDecoration: 'line-through'
+          }, props && props.style)
+        })
+      };
+    },
     small: function(props) {
       return {
         _type: 'widget',
@@ -699,13 +679,215 @@
         props: Object.assign({}, props, {
           style: Object.assign({
             position: 'relative',
-            fontSize: '0.8em'
+            fontSize: 'smaller'
+          }, props && props.style)
+        })
+      };
+    },
+    mark: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'mark',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            position: 'relative',
+            backgroundColor: 'yellow'
           }, props && props.style)
         })
       };
     },
 
-    // 分组元素
+    // 链接和媒体
+    a: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'a',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            position: 'relative',
+            color: '#0066cc',
+            textDecoration: 'none'
+          }, props && props.style)
+        })
+      };
+    },
+    img: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'img',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            position: 'relative'
+          }, props && props.style)
+        })
+      };
+    },
+
+    // 表单控件
+    button: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'button',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            padding: '8px 16px',
+            cursor: 'pointer',
+            border: '1px solid #ccc',
+            borderRadius: '4px',
+            backgroundColor: '#f0f0f0',
+            position: 'relative',
+            fontSize: '14px'
+          }, props && props.style)
+        })
+      };
+    },
+    input: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'input',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            padding: '8px',
+            border: '1px solid #ccc',
+            borderRadius: '4px',
+            position: 'relative',
+            fontSize: '14px'
+          }, props && props.style)
+        })
+      };
+    },
+    textarea: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'textarea',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            padding: '8px',
+            border: '1px solid #ccc',
+            borderRadius: '4px',
+            position: 'relative',
+            fontSize: '14px',
+            resize: 'vertical'
+          }, props && props.style)
+        })
+      };
+    },
+    select: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'select',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            padding: '8px',
+            border: '1px solid #ccc',
+            borderRadius: '4px',
+            position: 'relative',
+            fontSize: '14px'
+          }, props && props.style)
+        })
+      };
+    },
+    option: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'option',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            position: 'relative'
+          }, props && props.style)
+        })
+      };
+    },
+    text: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'input',
+        props: Object.assign({}, props, {
+          type: 'text',
+          style: Object.assign({
+            padding: '8px',
+            border: '1px solid #ccc',
+            borderRadius: '4px',
+            position: 'relative',
+            fontSize: '14px'
+          }, props && props.style)
+        })
+      };
+    },
+    password: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'input',
+        props: Object.assign({}, props, {
+          type: 'password',
+          style: Object.assign({
+            padding: '8px',
+            border: '1px solid #ccc',
+            borderRadius: '4px',
+            position: 'relative',
+            fontSize: '14px'
+          }, props && props.style)
+        })
+      };
+    },
+    email: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'input',
+        props: Object.assign({}, props, {
+          type: 'email',
+          style: Object.assign({
+            padding: '8px',
+            border: '1px solid #ccc',
+            borderRadius: '4px',
+            position: 'relative',
+            fontSize: '14px'
+          }, props && props.style)
+        })
+      };
+    },
+    number: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'input',
+        props: Object.assign({}, props, {
+          type: 'number',
+          style: Object.assign({
+            padding: '8px',
+            border: '1px solid #ccc',
+            borderRadius: '4px',
+            position: 'relative',
+            fontSize: '14px'
+          }, props && props.style)
+        })
+      };
+    },
+    checkbox: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'input',
+        props: Object.assign({}, props, {
+          type: 'checkbox',
+          style: Object.assign({
+            position: 'relative'
+          }, props && props.style)
+        })
+      };
+    },
+    radio: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'input',
+        props: Object.assign({}, props, {
+          type: 'radio',
+          style: Object.assign({
+            position: 'relative'
+          }, props && props.style)
+        })
+      };
+    },
+
+    // 布局和容器
     div: function(props) {
       return {
         _type: 'widget',
@@ -795,7 +977,7 @@
       };
     },
 
-    // 列表元素
+    // 列表
     ul: function(props) {
       return {
         _type: 'widget',
@@ -803,8 +985,8 @@
         props: Object.assign({}, props, {
           style: Object.assign({
             position: 'relative',
-            paddingLeft: '40px',
-            margin: '0 0 1em 0'
+            listStyle: 'disc',
+            paddingLeft: '40px'
           }, props && props.style)
         })
       };
@@ -816,8 +998,8 @@
         props: Object.assign({}, props, {
           style: Object.assign({
             position: 'relative',
-            paddingLeft: '40px',
-            margin: '0 0 1em 0'
+            listStyle: 'decimal',
+            paddingLeft: '40px'
           }, props && props.style)
         })
       };
@@ -834,7 +1016,7 @@
       };
     },
 
-    // 表格元素
+    // 表格
     table: function(props) {
       return {
         _type: 'widget',
@@ -842,8 +1024,7 @@
         props: Object.assign({}, props, {
           style: Object.assign({
             position: 'relative',
-            borderCollapse: 'collapse',
-            width: '100%'
+            borderCollapse: 'collapse'
           }, props && props.style)
         })
       };
@@ -866,7 +1047,7 @@
         props: Object.assign({}, props, {
           style: Object.assign({
             position: 'relative',
-            border: '1px solid #ddd',
+            border: '1px solid #ccc',
             padding: '8px'
           }, props && props.style)
         })
@@ -879,190 +1060,16 @@
         props: Object.assign({}, props, {
           style: Object.assign({
             position: 'relative',
-            border: '1px solid #ddd',
+            border: '1px solid #ccc',
             padding: '8px',
-            backgroundColor: '#f2f2f2',
             fontWeight: 'bold',
-            textAlign: 'left'
+            backgroundColor: '#f0f0f0'
           }, props && props.style)
         })
       };
     },
 
-    // 表单元素
-    input: function(props) {
-      return {
-        _type: 'widget',
-        tag: 'input',
-        props: Object.assign({}, props, {
-          style: Object.assign({
-            padding: '8px',
-            border: '1px solid #ccc',
-            borderRadius: '4px',
-            position: 'relative',
-            fontSize: '14px'
-          }, props && props.style)
-        })
-      };
-    },
-    textarea: function(props) {
-      return {
-        _type: 'widget',
-        tag: 'textarea',
-        props: Object.assign({}, props, {
-          style: Object.assign({
-            padding: '8px',
-            border: '1px solid #ccc',
-            borderRadius: '4px',
-            position: 'relative',
-            fontSize: '14px',
-            resize: 'vertical'
-          }, props && props.style)
-        })
-      };
-    },
-    select: function(props) {
-      return {
-        _type: 'widget',
-        tag: 'select',
-        props: Object.assign({}, props, {
-          style: Object.assign({
-            padding: '8px',
-            border: '1px solid #ccc',
-            borderRadius: '4px',
-            position: 'relative',
-            fontSize: '14px'
-          }, props && props.style)
-        })
-      };
-    },
-    button: function(props) {
-      return {
-        _type: 'widget',
-        tag: 'button',
-        props: Object.assign({}, props, {
-          style: Object.assign({
-            padding: '8px 16px',
-            cursor: 'pointer',
-            border: '1px solid #ccc',
-            borderRadius: '4px',
-            backgroundColor: '#f0f0f0',
-            position: 'relative',
-            fontSize: '14px'
-          }, props && props.style)
-        })
-      };
-    },
-    form: function(props) {
-      return {
-        _type: 'widget',
-        tag: 'form',
-        props: Object.assign({}, props, {
-          style: Object.assign({
-            position: 'relative'
-          }, props && props.style)
-        })
-      };
-    },
-    fieldset: function(props) {
-      return {
-        _type: 'widget',
-        tag: 'fieldset',
-        props: Object.assign({}, props, {
-          style: Object.assign({
-            position: 'relative',
-            border: '1px solid #ddd',
-            padding: '10px',
-            margin: '0 0 1em 0'
-          }, props && props.style)
-        })
-      };
-    },
-    legend: function(props) {
-      return {
-        _type: 'widget',
-        tag: 'legend',
-        props: Object.assign({}, props, {
-          style: Object.assign({
-            position: 'relative',
-            padding: '0 5px',
-            fontWeight: 'bold'
-          }, props && props.style)
-        })
-      };
-    },
-    label: function(props) {
-      return {
-        _type: 'widget',
-        tag: 'label',
-        props: Object.assign({}, props, {
-          style: Object.assign({
-            position: 'relative',
-            fontSize: '14px'
-          }, props && props.style)
-        })
-      };
-    },
-
-    // 媒体元素
-    img: function(props) {
-      return {
-        _type: 'widget',
-        tag: 'img',
-        props: Object.assign({}, props, {
-          style: Object.assign({
-            position: 'relative'
-          }, props && props.style)
-        })
-      };
-    },
-    video: function(props) {
-      return {
-        _type: 'widget',
-        tag: 'video',
-        props: Object.assign({}, props, {
-          style: Object.assign({
-            position: 'relative'
-          }, props && props.style)
-        })
-      };
-    },
-    audio: function(props) {
-      return {
-        _type: 'widget',
-        tag: 'audio',
-        props: Object.assign({}, props, {
-          style: Object.assign({
-            position: 'relative'
-          }, props && props.style)
-        })
-      };
-    },
-    canvas: function(props) {
-      return {
-        _type: 'widget',
-        tag: 'canvas',
-        props: Object.assign({}, props, {
-          style: Object.assign({
-            position: 'relative'
-          }, props && props.style)
-        })
-      };
-    },
-    iframe: function(props) {
-      return {
-        _type: 'widget',
-        tag: 'iframe',
-        props: Object.assign({}, props, {
-          style: Object.assign({
-            position: 'relative',
-            border: 'none'
-          }, props && props.style)
-        })
-      };
-    },
-
-    // 其他元素
+    // 其他
     br: function(props) {
       return {
         _type: 'widget',
@@ -1082,8 +1089,8 @@
           style: Object.assign({
             position: 'relative',
             border: 'none',
-            borderTop: '1px solid #ddd',
-            margin: '1em 0'
+            borderTop: '1px solid #ccc',
+            margin: '20px 0'
           }, props && props.style)
         })
       };
@@ -1096,8 +1103,7 @@
           style: Object.assign({
             position: 'relative',
             fontFamily: 'monospace',
-            whiteSpace: 'pre',
-            overflow: 'auto'
+            whiteSpace: 'pre'
           }, props && props.style)
         })
       };
@@ -1121,32 +1127,9 @@
         props: Object.assign({}, props, {
           style: Object.assign({
             position: 'relative',
-            borderLeft: '4px solid #ddd',
+            margin: '0 0 0 40px',
             paddingLeft: '20px',
-            margin: '0 0 1em 0'
-          }, props && props.style)
-        })
-      };
-    },
-    q: function(props) {
-      return {
-        _type: 'widget',
-        tag: 'q',
-        props: Object.assign({}, props, {
-          style: Object.assign({
-            position: 'relative'
-          }, props && props.style)
-        })
-      };
-    },
-    cite: function(props) {
-      return {
-        _type: 'widget',
-        tag: 'cite',
-        props: Object.assign({}, props, {
-          style: Object.assign({
-            position: 'relative',
-            fontStyle: 'italic'
+            borderLeft: '4px solid #ccc'
           }, props && props.style)
         })
       };
@@ -1269,7 +1252,7 @@
     });
   }
 
-  // Export the library
+  // 创建导出对象
   const crayonLib = {
     drawer: drawer,
     widget: widget,
@@ -1280,14 +1263,24 @@
     clearParent: clearParent
   };
 
-  // AMD / CommonJS / Global
+  // 兼容性导出处理
+  if (typeof window !== 'undefined') {
+    window.crayon = crayonLib;
+  }
+
   if (typeof define === 'function' && define.amd) {
     define([], function() { return crayonLib; });
-  } else if (typeof module !== 'undefined' && module.exports) {
-    module.exports = crayonLib;
-  } else {
-    global.crayon = crayonLib;
   }
-  export default crayonLib;
+
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports = crayonLib;
+    if (module.exports.default === undefined) {
+      module.exports.default = crayonLib;
+    }
+  }
+
+  if (typeof global !== 'undefined') {
+    global.crayonLib = crayonLib;
+  }
 
 })(typeof window !== 'undefined' ? window : this);
