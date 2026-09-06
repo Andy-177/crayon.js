@@ -761,4 +761,6 @@
     global.crayon = crayonLib;
   }
 
+  export default crayonLib;
+
 })(typeof window !== 'undefined' ? window : this);
