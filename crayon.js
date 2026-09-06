@@ -29,6 +29,14 @@
         el.checked = attrs[key];
       } else if (key === 'disabled') {
         el.disabled = attrs[key];
+      } else if (key === 'src') {
+        el.src = attrs[key];
+      } else if (key === 'href') {
+        el.href = attrs[key];
+      } else if (key === 'alt') {
+        el.alt = attrs[key];
+      } else if (key === 'placeholder') {
+        el.placeholder = attrs[key];
       } else {
         el.setAttribute(key, attrs[key]);
       }
@@ -173,7 +181,6 @@
         drawer._applyPlacement(element, place);
       }
 
-      // 如果 drawConfig 是 null 或 undefined 或空对象，都视为铺满
       if (drawConfig === undefined || drawConfig === null || (typeof drawConfig === 'object' && Object.keys(drawConfig).length === 0)) {
         drawer._applyRect(element, null);
       } else {
@@ -301,7 +308,6 @@
 
     _applyRect: function(element, rect) {
       if (!rect) {
-        // 铺满父容器
         element.style.position = 'absolute';
         element.style.top = '0';
         element.style.left = '0';
@@ -467,7 +473,6 @@
     if (!crayon._rootContainer) {
       crayon._rootContainer = document.createElement('div');
       crayon._rootContainer.id = 'crayon-root';
-      // 参考全屏按钮的样式：占满视口，无装饰
       crayon._rootContainer.style.cssText = `
         position: fixed;
         top: 0;
@@ -479,7 +484,6 @@
         padding: 0;
         box-sizing: border-box;
       `;
-      // 添加到 body，并确保 body 也占满
       document.body.style.cssText = `
         margin: 0;
         padding: 0;
@@ -499,25 +503,393 @@
     return crayon._rootContainer;
   };
 
-  // Widgets
+  // Widgets - 所有 HTML 元素
   const widget = {
-    button: function(props) {
+    // 文本元素
+    h1: function(props) {
       return {
         _type: 'widget',
-        tag: 'button',
+        tag: 'h1',
         props: Object.assign({}, props, {
           style: Object.assign({
-            padding: '8px 16px',
-            cursor: 'pointer',
-            border: '1px solid #ccc',
-            borderRadius: '4px',
-            backgroundColor: '#f0f0f0',
+            position: 'relative',
+            fontSize: '2rem',
+            fontWeight: 'bold'
+          }, props && props.style)
+        })
+      };
+    },
+    h2: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'h2',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            position: 'relative',
+            fontSize: '1.5rem',
+            fontWeight: 'bold'
+          }, props && props.style)
+        })
+      };
+    },
+    h3: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'h3',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            position: 'relative',
+            fontSize: '1.17rem',
+            fontWeight: 'bold'
+          }, props && props.style)
+        })
+      };
+    },
+    h4: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'h4',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            position: 'relative',
+            fontSize: '1rem',
+            fontWeight: 'bold'
+          }, props && props.style)
+        })
+      };
+    },
+    h5: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'h5',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            position: 'relative',
+            fontSize: '0.83rem',
+            fontWeight: 'bold'
+          }, props && props.style)
+        })
+      };
+    },
+    h6: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'h6',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            position: 'relative',
+            fontSize: '0.67rem',
+            fontWeight: 'bold'
+          }, props && props.style)
+        })
+      };
+    },
+    p: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'p',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            position: 'relative',
+            margin: '0 0 1em 0'
+          }, props && props.style)
+        })
+      };
+    },
+    span: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'span',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            position: 'relative'
+          }, props && props.style)
+        })
+      };
+    },
+    label: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'label',
+        props: Object.assign({}, props, {
+          style: Object.assign({
             position: 'relative',
             fontSize: '14px'
           }, props && props.style)
         })
       };
     },
+    a: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'a',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            position: 'relative',
+            color: '#0066cc',
+            textDecoration: 'none'
+          }, props && props.style)
+        })
+      };
+    },
+    strong: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'strong',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            position: 'relative',
+            fontWeight: 'bold'
+          }, props && props.style)
+        })
+      };
+    },
+    em: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'em',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            position: 'relative',
+            fontStyle: 'italic'
+          }, props && props.style)
+        })
+      };
+    },
+    b: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'b',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            position: 'relative',
+            fontWeight: 'bold'
+          }, props && props.style)
+        })
+      };
+    },
+    i: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'i',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            position: 'relative',
+            fontStyle: 'italic'
+          }, props && props.style)
+        })
+      };
+    },
+    u: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'u',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            position: 'relative',
+            textDecoration: 'underline'
+          }, props && props.style)
+        })
+      };
+    },
+    small: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'small',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            position: 'relative',
+            fontSize: '0.8em'
+          }, props && props.style)
+        })
+      };
+    },
+
+    // 分组元素
+    div: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'div',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            position: 'relative'
+          }, props && props.style)
+        })
+      };
+    },
+    section: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'section',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            position: 'relative'
+          }, props && props.style)
+        })
+      };
+    },
+    article: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'article',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            position: 'relative'
+          }, props && props.style)
+        })
+      };
+    },
+    header: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'header',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            position: 'relative'
+          }, props && props.style)
+        })
+      };
+    },
+    footer: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'footer',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            position: 'relative'
+          }, props && props.style)
+        })
+      };
+    },
+    nav: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'nav',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            position: 'relative'
+          }, props && props.style)
+        })
+      };
+    },
+    main: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'main',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            position: 'relative'
+          }, props && props.style)
+        })
+      };
+    },
+    aside: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'aside',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            position: 'relative'
+          }, props && props.style)
+        })
+      };
+    },
+
+    // 列表元素
+    ul: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'ul',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            position: 'relative',
+            paddingLeft: '40px',
+            margin: '0 0 1em 0'
+          }, props && props.style)
+        })
+      };
+    },
+    ol: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'ol',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            position: 'relative',
+            paddingLeft: '40px',
+            margin: '0 0 1em 0'
+          }, props && props.style)
+        })
+      };
+    },
+    li: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'li',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            position: 'relative'
+          }, props && props.style)
+        })
+      };
+    },
+
+    // 表格元素
+    table: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'table',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            position: 'relative',
+            borderCollapse: 'collapse',
+            width: '100%'
+          }, props && props.style)
+        })
+      };
+    },
+    tr: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'tr',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            position: 'relative'
+          }, props && props.style)
+        })
+      };
+    },
+    td: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'td',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            position: 'relative',
+            border: '1px solid #ddd',
+            padding: '8px'
+          }, props && props.style)
+        })
+      };
+    },
+    th: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'th',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            position: 'relative',
+            border: '1px solid #ddd',
+            padding: '8px',
+            backgroundColor: '#f2f2f2',
+            fontWeight: 'bold',
+            textAlign: 'left'
+          }, props && props.style)
+        })
+      };
+    },
+
+    // 表单元素
     input: function(props) {
       return {
         _type: 'widget',
@@ -564,6 +936,61 @@
         })
       };
     },
+    button: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'button',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            padding: '8px 16px',
+            cursor: 'pointer',
+            border: '1px solid #ccc',
+            borderRadius: '4px',
+            backgroundColor: '#f0f0f0',
+            position: 'relative',
+            fontSize: '14px'
+          }, props && props.style)
+        })
+      };
+    },
+    form: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'form',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            position: 'relative'
+          }, props && props.style)
+        })
+      };
+    },
+    fieldset: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'fieldset',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            position: 'relative',
+            border: '1px solid #ddd',
+            padding: '10px',
+            margin: '0 0 1em 0'
+          }, props && props.style)
+        })
+      };
+    },
+    legend: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'legend',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            position: 'relative',
+            padding: '0 5px',
+            fontWeight: 'bold'
+          }, props && props.style)
+        })
+      };
+    },
     label: function(props) {
       return {
         _type: 'widget',
@@ -576,29 +1003,8 @@
         })
       };
     },
-    span: function(props) {
-      return {
-        _type: 'widget',
-        tag: 'span',
-        props: Object.assign({}, props, {
-          style: Object.assign({
-            position: 'relative',
-            fontSize: '14px'
-          }, props && props.style)
-        })
-      };
-    },
-    div: function(props) {
-      return {
-        _type: 'widget',
-        tag: 'div',
-        props: Object.assign({}, props, {
-          style: Object.assign({
-            position: 'relative'
-          }, props && props.style)
-        })
-      };
-    },
+
+    // 媒体元素
     img: function(props) {
       return {
         _type: 'widget',
@@ -610,15 +1016,137 @@
         })
       };
     },
-    a: function(props) {
+    video: function(props) {
       return {
         _type: 'widget',
-        tag: 'a',
+        tag: 'video',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            position: 'relative'
+          }, props && props.style)
+        })
+      };
+    },
+    audio: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'audio',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            position: 'relative'
+          }, props && props.style)
+        })
+      };
+    },
+    canvas: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'canvas',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            position: 'relative'
+          }, props && props.style)
+        })
+      };
+    },
+    iframe: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'iframe',
         props: Object.assign({}, props, {
           style: Object.assign({
             position: 'relative',
-            color: '#0066cc',
-            textDecoration: 'none'
+            border: 'none'
+          }, props && props.style)
+        })
+      };
+    },
+
+    // 其他元素
+    br: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'br',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            position: 'relative'
+          }, props && props.style)
+        })
+      };
+    },
+    hr: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'hr',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            position: 'relative',
+            border: 'none',
+            borderTop: '1px solid #ddd',
+            margin: '1em 0'
+          }, props && props.style)
+        })
+      };
+    },
+    pre: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'pre',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            position: 'relative',
+            fontFamily: 'monospace',
+            whiteSpace: 'pre',
+            overflow: 'auto'
+          }, props && props.style)
+        })
+      };
+    },
+    code: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'code',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            position: 'relative',
+            fontFamily: 'monospace'
+          }, props && props.style)
+        })
+      };
+    },
+    blockquote: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'blockquote',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            position: 'relative',
+            borderLeft: '4px solid #ddd',
+            paddingLeft: '20px',
+            margin: '0 0 1em 0'
+          }, props && props.style)
+        })
+      };
+    },
+    q: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'q',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            position: 'relative'
+          }, props && props.style)
+        })
+      };
+    },
+    cite: function(props) {
+      return {
+        _type: 'widget',
+        tag: 'cite',
+        props: Object.assign({}, props, {
+          style: Object.assign({
+            position: 'relative',
+            fontStyle: 'italic'
           }, props && props.style)
         })
       };
@@ -760,7 +1288,6 @@
   } else {
     global.crayon = crayonLib;
   }
-
   export default crayonLib;
 
 })(typeof window !== 'undefined' ? window : this);
