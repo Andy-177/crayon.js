@@ -173,7 +173,6 @@
         drawer._applyPlacement(element, place);
       }
 
-      // 修复：统一处理 drawConfig
       // 如果 drawConfig 是 null 或 undefined 或空对象，都视为铺满
       if (drawConfig === undefined || drawConfig === null || (typeof drawConfig === 'object' && Object.keys(drawConfig).length === 0)) {
         drawer._applyRect(element, null);
@@ -267,7 +266,6 @@
     },
 
     recter: function(config) {
-      // 如果没传参数、传 null、或传空对象，都返回 null（铺满效果）
       if (config === undefined || config === null || (typeof config === 'object' && Object.keys(config).length === 0)) {
         return null;
       }
@@ -303,6 +301,7 @@
 
     _applyRect: function(element, rect) {
       if (!rect) {
+        // 铺满父容器
         element.style.position = 'absolute';
         element.style.top = '0';
         element.style.left = '0';
@@ -460,34 +459,40 @@
           });
           break;
       }
-    },
-
-    // 验证配置是否有效
-    isValidConfig: function(config) {
-      if (!config || typeof config !== 'object') return false;
-      
-      // 检查是否有 attr
-      if (!config.attr) return false;
-      
-      // 检查 attr 是否有 _type
-      if (!config.attr._type) return false;
-      
-      // 验证通过
-      return true;
     }
   };
 
-  // Initialize root container
+  // 初始化根容器 - 全屏占满，无装饰
   crayon._initRoot = function() {
     if (!crayon._rootContainer) {
       crayon._rootContainer = document.createElement('div');
       crayon._rootContainer.id = 'crayon-root';
+      // 参考全屏按钮的样式：占满视口，无装饰
       crayon._rootContainer.style.cssText = `
-        position: relative;
-        width: 100%;
-        min-height: 100vh;
-        padding: 20px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
         box-sizing: border-box;
+      `;
+      // 添加到 body，并确保 body 也占满
+      document.body.style.cssText = `
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      `;
+      document.documentElement.style.cssText = `
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
       `;
       document.body.appendChild(crayon._rootContainer);
     }
