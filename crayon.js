@@ -88,7 +88,17 @@
         if (this.element.parentNode) {
           this.element.parentNode.removeChild(this.element);
         }
-        let parent = parentInstance instanceof DrawerInstance ? parentInstance.element : parentInstance;
+        
+        let parent = null;
+        if (parentInstance instanceof DrawerInstance) {
+          if (!parentInstance._isDrawn) {
+            parentInstance.render();
+          }
+          parent = parentInstance.element;
+        } else {
+          parent = parentInstance;
+        }
+        
         if (parent) {
           parent.appendChild(this.element);
         }
@@ -163,15 +173,24 @@
         drawer._applyPlacement(element, place);
       }
 
-      if (drawConfig !== undefined) {
-        drawer._applyRect(element, drawConfig);
-      } else {
+      // 修复：统一处理 drawConfig
+      // 如果 drawConfig 是 null 或 undefined 或空对象，都视为铺满
+      if (drawConfig === undefined || drawConfig === null || (typeof drawConfig === 'object' && Object.keys(drawConfig).length === 0)) {
         drawer._applyRect(element, null);
+      } else {
+        drawer._applyRect(element, drawConfig);
       }
 
       let parent = null;
       if (bind) {
-        parent = bind instanceof DrawerInstance ? bind.element : bind;
+        if (bind instanceof DrawerInstance) {
+          if (!bind._isDrawn) {
+            bind.render();
+          }
+          parent = bind.element;
+        } else {
+          parent = bind;
+        }
       } else if (crayon._currentParent) {
         parent = crayon._currentParent;
       } else {
@@ -210,6 +229,7 @@
         this._isDrawn = false;
         this.element = null;
       }
+      this._children = [];
       return this;
     }
 
@@ -224,6 +244,13 @@
       }
       return this;
     }
+
+    destroy() {
+      this.remove();
+      this.config = null;
+      this._parent = null;
+      this._children = null;
+    }
   }
 
   // Drawer object containing all drawing utilities
@@ -233,7 +260,6 @@
     },
 
     place: function(config) {
-      // place 必须接收一个对象，包含 x, y, dx, dy
       if (!config || typeof config !== 'object') {
         throw new Error('crayon.drawer.place() requires an object with x, y, dx, or dy properties');
       }
@@ -241,7 +267,8 @@
     },
 
     recter: function(config) {
-      if (config === undefined || config === null) {
+      // 如果没传参数、传 null、或传空对象，都返回 null（铺满效果）
+      if (config === undefined || config === null || (typeof config === 'object' && Object.keys(config).length === 0)) {
         return null;
       }
       if (typeof config !== 'object') {
@@ -345,8 +372,7 @@
       Object.keys(style).forEach(key => {
         const value = style[key];
         if (key === 'color') {
-          element.style.backgroundColor = value;
-          element.style.borderColor = value;
+          element.style.color = value;
         } else {
           const cssKey = key.replace(/([A-Z])/g, '-$1').toLowerCase();
           element.style[cssKey] = value;
@@ -395,7 +421,7 @@
           break;
           
         case 'flow':
-          styles.display = 'flow';
+          styles.display = 'block';
           styles.padding = (config.padding || 10) + 'px';
           break;
           
@@ -434,6 +460,20 @@
           });
           break;
       }
+    },
+
+    // 验证配置是否有效
+    isValidConfig: function(config) {
+      if (!config || typeof config !== 'object') return false;
+      
+      // 检查是否有 attr
+      if (!config.attr) return false;
+      
+      // 检查 attr 是否有 _type
+      if (!config.attr._type) return false;
+      
+      // 验证通过
+      return true;
     }
   };
 
